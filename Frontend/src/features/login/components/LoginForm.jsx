@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FaUser, FaLock } from "react-icons/fa";
 import { loginUser } from "../services/authService";
 import { useNavigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode"; // ✅ importación correcta
+import jwt_decode from "jwt-decode"; // ✅ correcto para v3.1.2
 import "../styles/login.css";
 
 const LoginForm = ({ onToggle }) => {
@@ -23,24 +23,32 @@ const LoginForm = ({ onToggle }) => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const token = await loginUser(formData); // ya devuelve directamente el token
-      const decoded = jwtDecode(token); // ✅ decodificamos correctamente
-      const userRole = decoded.role;
+  e.preventDefault();
+  try {
+    const token = await loginUser(formData);
 
-      alert("Login exitoso");
+    console.log("🔐 TOKEN RECIBIDO:", token); // 👈 Asegúrate que aquí aparece el token correcto
 
-      // redirige según el rol
-      if (userRole === "admin") {
-        navigate("/admin");
-      } else {
-        navigate("/cliente");
-      }
-    } catch (error) {
-      alert(error.message || "Credenciales inválidas");
+    if (!token || typeof token !== "string") {
+      throw new Error("Token inválido");
     }
-  };
+
+    const decoded = jwt_decode(token);
+
+    const userRole = decoded.role;
+
+    alert("Login exitoso");
+
+    if (userRole === "admin") {
+      navigate("/admin");
+    } else {
+      navigate("/cliente");
+    }
+  } catch (error) {
+    console.error("❌ Error en login:", error.message);
+    alert(error.message || "Credenciales inválidas");
+  }
+};
 
   return (
     <div className="login-box">

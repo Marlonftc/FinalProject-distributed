@@ -16,7 +16,7 @@ export const loginUser = async (credentials) => {
       throw new Error(data.message || "Login failed");
     }
 
-    return data; // Retornamos el objeto con el token
+    return data.token; // Retornamos el objeto con el token
   } catch (error) {
     throw error;
   }
