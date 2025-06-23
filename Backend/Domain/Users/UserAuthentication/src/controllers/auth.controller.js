@@ -32,16 +32,21 @@ exports.registerUser = (req, res) => {
 
 exports.loginUser = (req, res) => {
   const { username, password } = req.body;
+  console.log("🔍 Usuario recibido:", username);
+  console.log("🔍 Password recibido:", password);
 
   db.query('SELECT * FROM users WHERE username = ?', [username], async (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
-    if (results.length === 0) return res.status(401).json({ message: 'Credenciales inválidas' });
+    if (results.length === 0) return res.status(401).json({ message: 'Credenciales inválidas (usuario)' });
 
     const user = results[0];
-    const isValid = await bcrypt.compare(password, user.password);
-    if (!isValid) return res.status(401).json({ message: 'Credenciales inválidas' });
+    console.log("🔐 Hash en base de datos:", user.password);
 
-    // 🔐 Token con rol
+    const isValid = await bcrypt.compare(password, user.password);
+    console.log("✅ ¿Contraseña válida?:", isValid);
+
+    if (!isValid) return res.status(401).json({ message: 'Credenciales inválidas (password)' });
+
     const token = jwt.sign(
       { id: user.id, username: user.username, role: user.role },
       process.env.JWT_SECRET,
@@ -51,4 +56,3 @@ exports.loginUser = (req, res) => {
     res.json({ token });
   });
 };
-
