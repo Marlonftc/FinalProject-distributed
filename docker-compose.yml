@@ -18,7 +18,7 @@ services:
 
   userauth:
     build:
-      context: ./Backend/Domain/UserAuth
+      context: ./Backend/Domain/Users/UserAuth
     container_name: userauth
     ports:
       - "3000:3000"
@@ -36,7 +36,7 @@ services:
 
   getuser-service:
     build:
-      context: ./Backend/Domain/GetUser
+      context: ./Backend/Domain/Users/GetUser
     container_name: getuser
     ports:
       - "3002:3002"
@@ -54,7 +54,7 @@ services:
 
   updateuser-service:
     build:
-      context: ./Backend/Domain/UpdateUser
+      context: ./Backend/Domain/Users/UpdateUser
     container_name: updateuser
     ports:
       - "3003:3003"
@@ -72,7 +72,7 @@ services:
 
   deleteuser-service:
     build:
-      context: ./Backend/Domain/DeleteUser
+      context: ./Backend/Domain/Users/DeleteUser
     container_name: deleteuser
     ports:
       - "3004:3004"
@@ -90,7 +90,7 @@ services:
 
   userauthjwt-service:
     build:
-      context: ./Backend/Domain/UserAuthentication
+      context: ./Backend/Domain/Users/UserAuthentication
     container_name: userauthjwt
     ports:
       - "3005:3005"
@@ -117,7 +117,7 @@ services:
 
   usernotification-service:
     build:
-      context: ./Backend/Domain/UserNotification
+      context: ./Backend/Domain/Users/UserNotification
     container_name: usernotification
     ports:
       - "3006:3006"
