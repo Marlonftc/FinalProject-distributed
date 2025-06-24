@@ -1,0 +1,4 @@
+com/inventory/createitem/repository/ItemRepository.class
+com/inventory/createitem/model/Item.class
+com/inventory/createitem/controller/ItemController.class
+com/inventory/createitem/CreateItemServiceApplication.class

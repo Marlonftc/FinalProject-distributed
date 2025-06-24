@@ -1,0 +1,24 @@
+-- Crear base de datos de usuarios
+CREATE DATABASE IF NOT EXISTS usersdb;
+USE usersdb;
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(100) NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  email VARCHAR(100) UNIQUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Crear base de datos de inventario
+CREATE DATABASE IF NOT EXISTS inventorydb;
+USE inventorydb;
+CREATE TABLE IF NOT EXISTS items (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  description TEXT,
+  quantity INT DEFAULT 0,
+  price DECIMAL(10,2),
+  type VARCHAR(100),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+

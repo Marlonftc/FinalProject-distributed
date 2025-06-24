@@ -1,0 +1,5 @@
+com/inventory/deleteitem/DeleteItemServiceApplication.class
+com/inventory/deleteitem/service/ItemService.class
+com/inventory/deleteitem/repository/ItemRepository.class
+com/inventory/deleteitem/model/Item.class
+com/inventory/deleteitem/controller/ItemController.class

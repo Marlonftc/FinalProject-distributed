@@ -1,0 +1,4 @@
+com/inventory/updateitem/controller/ItemController.class
+com/inventory/updateitem/model/Item.class
+com/inventory/updateitem/repository/ItemRepository.class
+com/inventory/updateitem/UpdateItemServiceApplication.class

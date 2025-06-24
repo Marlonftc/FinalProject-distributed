@@ -2,15 +2,19 @@ FROM node:18
 
 WORKDIR /app
 
-# Copiamos solo los archivos de dependencias primero
+# Copiar y preparar dependencias
 COPY package*.json ./
-
 RUN npm install
 
-# Ahora copiamos el resto del código (incluye src, .env, etc.)
+# Copiar el resto del código
 COPY . .
+
+# Copiar script de espera (lo crearás tú ahora)
+COPY wait-for-mysql.js .
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+# Esperar a MySQL antes de iniciar el servidor
+CMD ["sh", "-c", "node wait-for-mysql.js && npm start"]
+
 
