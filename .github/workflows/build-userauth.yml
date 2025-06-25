@@ -46,4 +46,4 @@ jobs:
               -e DB_PORT=3306 \
               -e PORT=3000 \
               mftc2412/userauth-service
-              ---
+              
