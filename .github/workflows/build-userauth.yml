@@ -8,7 +8,7 @@ on:
       - test
     paths:
       - 'Backend/Domain/Users/UserAuth/**'
-      - '.github/workflows/deploy-userauth.yml'
+      - '.github/workflows/build-userauth.yml'
 
 jobs:
   deploy:
