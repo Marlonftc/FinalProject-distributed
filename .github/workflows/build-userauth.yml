@@ -1,0 +1,48 @@
+# .github/workflows/deploy-userauth.yml
+name: Deploy UserAuth Service
+
+on:
+  push:
+    branches:
+      - main
+      - test
+    paths:
+      - 'Backend/Domain/Users/UserAuth/**'
+      - '.github/workflows/deploy-userauth.yml'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push Docker image
+        run: |
+          docker build -t mftc2412/userauth-service ./Backend/Domain/Users/UserAuth
+          docker push mftc2412/userauth-service
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            docker rm -f userauth-service || true
+            docker pull mftc2412/userauth-service
+            docker run -d --name userauth-service -p 3000:3000 \
+              -e DB_HOST=mysql \
+              -e DB_USER=root \
+              -e DB_PASSWORD=1234 \
+              -e DB_NAME=usersdb \
+              -e DB_PORT=3306 \
+              -e PORT=3000 \
+              mftc2412/userauth-service

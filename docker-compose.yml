@@ -208,9 +208,51 @@ services:
       - DB_PASSWORD=1234
     networks:
       - auth-net
+     
+  check-availability-service:
+    build:
+      context: ./Backend/Domain/InventoryServices/CheckAvailability
+    container_name: check-availability-service
+    ports:
+      - "8085:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      - PORT=8080
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_NAME=inventorydb
+      - DB_USER=root
+      - DB_PASSWORD=1234
+    networks:
+      - auth-net
+  mongo:
+    image: mongo:5
+    container_name: notary-mongo
+    ports:
+      - "27017:27017"
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+      - ./Backend/DataBases/Mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - auth-net
+
+  frontend:
+    build:
+      context: ./Frontend
+    container_name: frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - userauth
+    networks:
+      - auth-net
 
 volumes:
   mysql_data:
+  mongo-data:
 
 networks:
   auth-net:

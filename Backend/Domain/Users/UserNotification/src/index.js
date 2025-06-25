@@ -1,3 +1,4 @@
+// src/index.js
 const express = require('express');
 const http = require('http');
 const socketIO = require('socket.io');
@@ -18,22 +19,24 @@ const io = socketIO(server, {
 app.use(cors());
 app.use(express.json());
 
-io.on('connection', socket => {
-  console.log('🔌 Cliente conectado al socket');
-
-  // Escuchamos mensajes desde Redis y emitimos por Socket.IO
-  redisClient.subscribe('user_notifications');
-  redisClient.on('message', (channel, message) => {
-    console.log(`📢 Notificación recibida en canal ${channel}: ${message}`);
-    socket.emit('notification', message);
-  });
+io.on('connection', (socket) => {
+  console.log(' Cliente conectado al socket');
 
   socket.on('disconnect', () => {
-    console.log('❌ Cliente desconectado del socket');
+    console.log(' Cliente desconectado del socket');
   });
 });
 
+// SUSCRIPCIÓN a Redis
+(async () => {
+  await redisClient.connect(); // se asegura de estar conectado
+  await redisClient.subscribe('user_notifications', (message) => {
+    console.log(` Mensaje recibido desde Redis: ${message}`);
+    io.emit('notification', message); // emite a todos los clientes conectados
+  });
+})();
+
 const PORT = process.env.PORT || 3006;
 server.listen(PORT, () => {
-  console.log(`🚀 UserNotification service listening on port ${PORT}`);
+  console.log(` UserNotification service listening on port ${PORT}`);
 });

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Notificaciones en Tiempo Real</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 2rem;
+    }
+    h1 {
+      font-size: 24px;
+    }
+    ul {
+      list-style-type: "🔔 ";
+      padding-left: 20px;
+    }
+    li {
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Notificaciones:</h1>
+  <ul id="notifications"></ul>
+
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script>
+    const socket = io("http://localhost:3006");
+
+    socket.on("connect", () => {
+      console.log("Conectado al servidor de WebSocket");
+    });
+
+    socket.on("notification", (msg) => {
+      console.log("📥 Notificación recibida:", msg);
+      const list = document.getElementById("notifications");
+      const item = document.createElement("li");
+      item.textContent = msg;
+      list.appendChild(item);
+    });
+  </script>
+</body>
+</html>

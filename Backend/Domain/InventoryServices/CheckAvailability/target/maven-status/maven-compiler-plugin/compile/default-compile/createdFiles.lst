@@ -1,0 +1,4 @@
+com/inventory/checkavailability/model/Item.class
+com/inventory/checkavailability/controller/ItemController.class
+com/inventory/checkavailability/repository/ItemRepository.class
+com/inventory/checkavailability/CheckAvailabilityServiceApplication.class

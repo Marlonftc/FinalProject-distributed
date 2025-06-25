@@ -1,0 +1,4 @@
+com/inventoryservices/itemimage/controller/ImageController.class
+com/inventoryservices/itemimage/ItemImageServiceApplication.class
+com/inventoryservices/itemimage/model/ImageDocument.class
+com/inventoryservices/itemimage/repository/ImageRepository.class
