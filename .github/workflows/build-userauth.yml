@@ -1,10 +1,10 @@
-# .github/workflows/deploy-userauth.yml
+
 name: Deploy UserAuth Service
 
 on:
   push:
     branches:
-      - main
+      
       - test
     paths:
       - 'Backend/Domain/Users/UserAuth/**'
@@ -39,9 +39,9 @@ jobs:
             docker rm -f userauth-service || true
             docker pull mftc2412/userauth-service
             docker run -d --name userauth-service -p 3000:3000 \
-              -e DB_HOST=mysql \
+              -e DB_HOST=3.83.239.248 \
               -e DB_USER=root \
-              -e DB_PASSWORD=1234 \
+              -e DB_PASSWORD=MySql@1234\
               -e DB_NAME=usersdb \
               -e DB_PORT=3306 \
               -e PORT=3000 \

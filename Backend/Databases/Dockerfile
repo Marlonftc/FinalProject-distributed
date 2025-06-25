@@ -1,4 +1,4 @@
-# Dockerfile para MySQL con init.sql
+# Dockerfile for MySQL Database
 FROM mysql:8.0
 ENV MYSQL_ROOT_PASSWORD=root
 ENV MYSQL_DATABASE=notarydb

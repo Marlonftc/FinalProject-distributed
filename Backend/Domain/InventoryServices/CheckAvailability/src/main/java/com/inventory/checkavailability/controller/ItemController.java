@@ -17,7 +17,7 @@ public class ItemController {
     @Autowired
     private ItemRepository itemRepository;
 
-    // ✅ Primero: ruta fija para verificar el estado del microservicio
+   // First: fixed route to check the status of the microservice
     @GetMapping("/check")
     public Map<String, String> checkService() {
         Map<String, String> response = new HashMap<>();
@@ -25,7 +25,7 @@ public class ItemController {
         return response;
     }
 
-    // ✅ Segundo: ruta dinámica que se ejecuta solo si se envía un número
+    // Second: dynamic route that runs only if a number is sent
     @GetMapping("/{id}")
     public String checkAvailability(@PathVariable("id") Long id) {
         Optional<Item> item = itemRepository.findById(id);

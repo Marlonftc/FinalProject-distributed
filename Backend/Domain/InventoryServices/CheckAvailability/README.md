@@ -1,16 +1,16 @@
-# Create Item Service
+## CreateItemService
 
-Microservicio encargado de crear ítems en el inventario.
+Microservice responsible for creating items in the inventory.
 
 ## Endpoints
 
 ### POST `/items`
-Crea un nuevo ítem.
-- Body JSON:
+Creates a new item.
+- JSON Body:
 ```json
 {
-  "name": "Carpa grande",
-  "description": "Carpa blanca de 6x6 metros",
-  "quantity": 5,
-  "price": 120.50
+"name": "Large Tent",
+"description": "6x6 meter white tent",
+"quantity": 5.
+"price": 120.50
 }

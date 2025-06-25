@@ -1,4 +1,4 @@
--- Crear base de datos de usuarios
+-- Create user database
 CREATE DATABASE IF NOT EXISTS usersdb;
 USE usersdb;
 CREATE TABLE IF NOT EXISTS users (
@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS users (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Crear base de datos de inventario
+-- Create inventory database
 CREATE DATABASE IF NOT EXISTS inventorydb;
 USE inventorydb;
 CREATE TABLE IF NOT EXISTS items (
