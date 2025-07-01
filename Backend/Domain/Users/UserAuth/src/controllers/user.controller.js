@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 exports.register = async (req, res) => {
   const db = req.app.locals.db;
@@ -17,17 +17,17 @@ exports.register = async (req, res) => {
 
     db.query(query, [username, hashedPassword, email], (err, result) => {
       if (err) {
-        console.error("❌ Error al insertar en la base:", err);
+        console.error(" Error al insertar en la base:", err);
         return res.status(500).json({ error: "Error en base de datos" });
       }
 
       res.status(201).json({
-        message: "✅ Usuario creado exitosamente",
+        message: " Usuario creado exitosamente",
         userId: result.insertId
       });
     });
   } catch (err) {
-    console.error("❌ Error general:", err);
+    console.error(" Error general:", err);
     res.status(500).json({ message: "Error al registrar usuario" });
   }
 };
