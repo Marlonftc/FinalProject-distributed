@@ -38,7 +38,7 @@ jobs:
           script: |
             docker rm -f userauth-service || true
             docker pull mftc2412/userauth-service
-            docker run -d --name userauth-service -p 80:3000 \
+            docker run -d --restart unless-stopped --name userauth-service -p 80:3000 \
               -e DB_HOST=3.224.166.101  \
               -e DB_USER=root \
               -e DB_PASSWORD=MySql@1234\
