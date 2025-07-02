@@ -1,8 +1,8 @@
-// src/features/login/services/authService.js
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const loginUser = async (credentials) => {
   try {
-    const response = await fetch("http://localhost:3005/api/auth/login", {
+    const response = await fetch(`${API_URL}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -16,14 +16,14 @@ export const loginUser = async (credentials) => {
       throw new Error(data.message || "Login failed");
     }
 
-    return data.token; // Retornamos el objeto con el token
+    return data.token;
   } catch (error) {
     throw error;
   }
 };
 
 export const registerUser = async (userData) => {
-  const response = await fetch("http://localhost:3005/api/auth/register", {
+  const response = await fetch(`${API_URL}/auth/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(userData),
