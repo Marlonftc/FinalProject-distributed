@@ -6,7 +6,7 @@ on:
       - test
     paths:
       - 'Backend/Domain/Users/userauthentication/**'
-      - '.github/workflows/deploy-userauthentication.yml'
+      - '.github/workflows/build-userauthentication.yml'
 
 jobs:
   deploy:
