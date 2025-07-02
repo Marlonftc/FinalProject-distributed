@@ -5,7 +5,7 @@ on:
     branches:
       - test
     paths:
-      - 'Backend/Domain/User/userauthentication/**'
+      - 'Backend/Domain/Users/userauthentication/**'
       - '.github/workflows/deploy-userauthentication.yml'
 
 jobs:
