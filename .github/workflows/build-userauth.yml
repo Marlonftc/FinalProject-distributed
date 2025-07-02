@@ -1,12 +1,14 @@
-name: Deploy Frontend 
+
+name: Deploy UserAuth Service
 
 on:
   push:
     branches:
+      
       - test
     paths:
-      - 'Frontend/**'
-      - '.github/workflows/build-frontend.yml'
+      - 'Backend/Domain/Users/UserAuth/**'
+      - '.github/workflows/build-userauth.yml'
 
 jobs:
   deploy:
@@ -24,16 +26,24 @@ jobs:
 
       - name: Build and Push Docker image
         run: |
-          docker build -t mftc2412/frontend-app ./Frontend
-          docker push mftc2412/frontend-app
+          docker build -t mftc2412/userauth-service ./Backend/Domain/Users/UserAuth
+          docker push mftc2412/userauth-service
 
-      - name: Deploy to EC2 Frontend Instance
+      - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.0
         with:
-          host: ${{ secrets.EC2_HOST_FRONT }}
-          username: ${{ secrets.EC2_USER_FRONT }}
-          key: ${{ secrets.EC2_KEY_FRONT }}
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
           script: |
-            docker rm -f frontend-app || true
-            docker pull mftc2412/frontend-app
-            docker run -d --restart unless-stopped --name frontend-app -p 8080:80 mftc2412/frontend-app
+            docker rm -f userauth-service || true
+            docker pull mftc2412/userauth-service
+            docker run -d --restart unless-stopped --name userauth-service -p 80:3000 \
+              -e DB_HOST=3.224.166.101  \
+              -e DB_USER=root \
+              -e DB_PASSWORD=MySql@1234\
+              -e DB_NAME=usersdb \
+              -e DB_PORT=3306 \
+              -e PORT=3000 \
+              mftc2412/userauth-service
+              
