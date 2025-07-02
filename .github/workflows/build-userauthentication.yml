@@ -24,7 +24,7 @@ jobs:
 
       - name: Build and Push Docker image
         run: |
-          docker build -t mftc2412/userauthentication-service ./Backend/Domain/User/userauthentication
+          docker build -t mftc2412/userauthentication-service ./Backend/Domain/Users/userauthentication
           docker push mftc2412/userauthentication-service
 
       - name: Deploy to EC2
