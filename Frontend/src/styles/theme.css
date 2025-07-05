@@ -1,0 +1,11 @@
+/* ... tus estilos ... */
+
+body[data-theme='dark'] {
+  background: url('/bg-dark.jpg') no-repeat center center fixed;
+  background-size: cover;
+}
+
+body[data-theme='light'] {
+  background: url('/bg-login.jpg') no-repeat center center fixed;
+  background-size: cover;
+}

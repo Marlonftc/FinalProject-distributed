@@ -1,20 +1,31 @@
 const { createClient } = require('redis');
 
-const redisClient = createClient({
+// Cliente para publicar mensajes
+const publisher = createClient({
   url: process.env.REDIS_URL || 'redis://redis:6379'
 });
 
-redisClient.on('error', (err) => console.error('Redis Client Error:', err));
+// Cliente para suscribirse a mensajes
+const subscriber = createClient({
+  url: process.env.REDIS_URL || 'redis://redis:6379'
+});
 
-async function connectIfNotConnected() {
-  if (!redisClient.isOpen) {
-    await redisClient.connect();
-  }
+publisher.on('error', (err) => console.error('Redis Publisher Error:', err));
+subscriber.on('error', (err) => console.error('Redis Subscriber Error:', err));
+
+async function connectClients() {
+  if (!publisher.isOpen) await publisher.connect();
+  if (!subscriber.isOpen) await subscriber.connect();
 }
 
 module.exports = {
-  connect: connectIfNotConnected,
-  subscribe: (...args) => redisClient.subscribe(...args),
-  publish: (...args) => redisClient.publish(...args),
-  redisClient
+  connect: connectClients,
+  publish: async (channel, message) => {
+    if (!publisher.isOpen) await publisher.connect();
+    await publisher.publish(channel, message);
+  },
+  subscribe: async (channel, handler) => {
+    if (!subscriber.isOpen) await subscriber.connect();
+    await subscriber.subscribe(channel, handler);
+  }
 };

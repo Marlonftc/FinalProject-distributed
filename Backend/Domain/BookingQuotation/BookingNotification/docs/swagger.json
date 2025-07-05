@@ -1,0 +1,114 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API for storing and retrieving booking notifications",
+        "title": "Booking Notification API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8092",
+    "basePath": "/api",
+    "paths": {
+        "/notifications": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Get all notifications",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/bookingnotification.NotificationResponse"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Create notification",
+                "parameters": [
+                    {
+                        "description": "Notification data",
+                        "name": "notification",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/bookingnotification.Notification"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/bookingnotification.NotificationResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/bookingnotification.NotificationResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bookingnotification.NotificationResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "bookingnotification.Notification": {
+            "type": "object",
+            "properties": {
+                "booking_id": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "bookingnotification.NotificationResponse": {
+            "type": "object",
+            "properties": {
+                "booking_id": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

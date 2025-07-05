@@ -1,0 +1,74 @@
+basePath: /api
+definitions:
+  bookingnotification.Notification:
+    properties:
+      booking_id:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      message:
+        type: string
+    type: object
+  bookingnotification.NotificationResponse:
+    properties:
+      booking_id:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      message:
+        type: string
+    type: object
+host: localhost:8092
+info:
+  contact: {}
+  description: API for storing and retrieving booking notifications
+  title: Booking Notification API
+  version: "1.0"
+paths:
+  /notifications:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/bookingnotification.NotificationResponse'
+            type: array
+      summary: Get all notifications
+      tags:
+      - Notifications
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Notification data
+        in: body
+        name: notification
+        required: true
+        schema:
+          $ref: '#/definitions/bookingnotification.Notification'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/bookingnotification.NotificationResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/bookingnotification.NotificationResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/bookingnotification.NotificationResponse'
+      summary: Create notification
+      tags:
+      - Notifications
+swagger: "2.0"

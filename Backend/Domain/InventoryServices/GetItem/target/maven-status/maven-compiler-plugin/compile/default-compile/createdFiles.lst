@@ -1,5 +1,5 @@
-com/inventory/getitem/controller/ItemController.class
-com/inventory/getitem/GetItemServiceApplication.class
-com/inventory/getitem/service/ItemService.class
-com/inventory/getitem/repository/ItemRepository.class
-com/inventory/getitem/model/Item.class
+com\inventory\getitem\GetItemServiceApplication.class
+com\inventory\getitem\service\ItemService.class
+com\inventory\getitem\controller\ItemController.class
+com\inventory\getitem\model\Item.class
+com\inventory\getitem\repository\ItemRepository.class

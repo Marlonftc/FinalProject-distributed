@@ -1,0 +1,67 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API to update booking entries in SQL Server",
+        "title": "Update Booking API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/api/bookings",
+    "paths": {
+        "/api/bookings/{id}": {
+            "put": {
+                "description": "Update an existing booking by ID",
+                "summary": "Update booking",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Booking ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Booking info",
+                        "name": "booking",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.Booking"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Booking updated",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "main.Booking": {
+            "type": "object",
+            "properties": {
+                "client_name": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "service": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

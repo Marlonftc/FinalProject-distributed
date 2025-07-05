@@ -5,15 +5,12 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
-# Copiar todo el contenido (incluido el script de espera)
-COPY . .
+# Instalar netcat para que el script wait-for-mysql.sh funcione
+RUN apt-get update && apt-get install -y netcat-openbsd
 
-# Copiar el script de espera y darle permisos de ejecución
-COPY wait-for-mysql.sh .
+COPY . .
 RUN chmod +x wait-for-mysql.sh
 
 EXPOSE 3003
 
-# Usar el script como punto de entrada
-CMD ["./wait-for-mysql.sh"]
-
+CMD ["sh", "./wait-for-mysql.sh"]

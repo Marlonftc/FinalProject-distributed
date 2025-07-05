@@ -1,4 +1,4 @@
-version: '3.8'
+
 
 services:
   mysql:
@@ -19,24 +19,47 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
-  userauth:
-    build:
-      context: ./Backend/Domain/Users/UserAuth
-    container_name: userauth
-    ports:
-      - "3000:3000"
-    depends_on:
-      - mysql
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
     environment:
-      - DB_HOST=mysql
-      - DB_USER=root
-      - DB_PASSWORD=1234
-      - DB_NAME=usersdb
-      - DB_PORT=3306
-      - PORT=3000
+      SA_PASSWORD: "Admin123!"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+      - ./Backend/DataBases/SQLServer/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - auth-net
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "Admin123!", "-Q", "SELECT 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
+  postgres-adminproducts:
+    build: ./Backend/Databases/PostgreSQL
+    container_name: postgres-adminproducts
+    restart: always
+    ports:
+      - "5433:5432"  # evita conflicto si el puerto 5432 ya está ocupado
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: adminproductsdb
+    networks:
+      - auth-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+
+
+
 
   getuser-service:
     build:
@@ -227,6 +250,7 @@ services:
       - DB_PASSWORD=1234
     networks:
       - auth-net
+
   mongo:
     image: mongo:5
     container_name: notary-mongo
@@ -239,6 +263,34 @@ services:
     networks:
       - auth-net
 
+  usersettings-service:
+    build:
+      context: ./Backend/Domain/Users/UserSettings
+    container_name: usersettings-service
+    ports:
+      - "3009:3009"
+    depends_on:
+      - mongo
+    environment:
+      - PORT=3009
+      - MONGO_URI=mongodb://notary-mongo:27017/usersettingsdb
+    networks:
+      - auth-net
+
+  item-image-service:
+    build:
+      context: ./Backend/Domain/InventoryServices/ItemImage
+    container_name: item-image-service
+    ports:
+      - "8087:8080"
+    depends_on:
+      - mongo
+    environment:
+      - PORT=8080
+      - MONGO_URI=mongodb://notary-mongo:27017/itemimagesdb
+    networks:
+      - auth-net
+
   frontend:
     build:
       context: ./Frontend
@@ -246,13 +298,149 @@ services:
     ports:
       - "8080:80"
     depends_on:
-      - userauth
+      - userauthjwt-service
     networks:
       - auth-net
+
+  create-booking-service:
+    build:
+      context: ./Backend/Domain/BookingQuotation/CreateBooking
+    container_name: create-booking-service
+    ports:
+      - "8086:8080"
+    depends_on:
+      - sqlserver
+    environment:
+      - PORT=8080
+      - DB_HOST=sqlserver
+      - DB_PORT=1433
+      - DB_NAME=bookingdb
+      - DB_USER=sa
+      - DB_PASSWORD=Admin123!
+    networks:
+      - auth-net
+
+  update-booking-service:
+    build:
+      context: ./Backend/Domain/BookingQuotation/UpdateBooking
+    container_name: update-booking-service
+    ports:
+      - "8088:8080"
+    depends_on:
+      - sqlserver  
+    environment:
+      - PORT=8080
+      - DB_HOST=sqlserver
+      - DB_PORT=1433
+      - DB_NAME=bookingdb
+      - DB_USER=sa
+      - DB_PASSWORD=Admin123!
+    networks:
+      - auth-net
+
+  delete-booking-service:
+    build:
+      context: ./Backend/Domain/BookingQuotation/DeleteBooking
+    container_name: delete-booking-service
+    ports:
+      - "8089:8080"
+    depends_on:
+      - sqlserver
+
+    environment:
+      - PORT=8080
+      - DB_HOST=sqlserver
+      - DB_PORT=1433
+      - DB_NAME=bookingdb
+      - DB_USER=sa
+      - DB_PASSWORD=Admin123!
+    networks:
+      - auth-net
+
+
+  get-booking-service:
+    container_name: get-booking-service       
+    build:
+      context: ./Backend/Domain/BookingQuotation/GetBooking
+    ports:
+      - "8090:8080"
+    environment:
+      - PORT=8080
+      - SQLSERVER_CONN=sqlserver://sa:Admin123!@sqlserver:1433?database=bookingdb
+    depends_on:
+      - sqlserver
+    networks:
+      - auth-net
+
+  quotation-service:
+    build:
+      context: ./Backend/Domain/BookingQuotation/Quotation
+    ports:
+      - "8091:8080"
+    environment:
+      - PORT=8080
+      - SQLSERVER_CONN=sqlserver://sa:Admin123!@sqlserver:1433?database=bookingdb
+    depends_on:
+      - sqlserver
+    networks:
+      - auth-net
+        
+  booking-notification-service:
+    build:
+      context: ./Backend/Domain/BookingQuotation/BookingNotification
+    container_name: booking-notification-service
+    ports:
+      - "8092:8092"
+    depends_on:
+      - mongo
+    environment:
+      - PORT=8092
+      - MONGO_URI=mongodb://notary-mongo:27017/notificationdb
+    networks:
+      - auth-net
+
+  create-product-service:
+    build: ./Backend/Domain/Administrator/CreateProduct
+    container_name: create-product-service
+    ports:
+      - "8093:8093"
+    depends_on:
+      postgres-adminproducts:
+        condition: service_healthy
+    environment:
+      - PORT=8093
+      - POSTGRES_HOST=postgres-adminproducts
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=adminproductsdb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin123
+    networks:
+      - auth-net
+    
+  delete-product-service:
+      build: ./Backend/Domain/Administrator/DeleteProduct
+      container_name: delete-product-service
+      ports:
+      - "8094:8094"
+      depends_on:
+       postgres-adminproducts:
+        condition: service_healthy
+      environment:
+      - PORT=8094
+      - POSTGRES_HOST=postgres-adminproducts
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=adminproductsdb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin123
+      networks:
+      - auth-net
+
+
 
 volumes:
   mysql_data:
   mongo-data:
+  sqlserver-data:
 
 networks:
   auth-net:

@@ -1,0 +1,33 @@
+basePath: /api/bookings
+host: localhost:8080
+info:
+  contact: {}
+  description: API to get bookings from SQL Server
+  title: Get Booking API
+  version: "1.0"
+paths:
+  /api/bookings/{id}:
+    get:
+      description: Retrieve booking details from SQL Server
+      parameters:
+      - description: Booking ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Booking not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      summary: Get booking by ID
+swagger: "2.0"

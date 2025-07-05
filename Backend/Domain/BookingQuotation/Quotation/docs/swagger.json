@@ -1,0 +1,81 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Microservicio para manejar cotizaciones de reservas",
+        "title": "Quotation API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/quotation": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Crear una nueva cotización",
+                "parameters": [
+                    {
+                        "description": "Quotation info",
+                        "name": "quotation",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.Quotation"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cotización creada correctamente",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/quotations": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Obtener todas las cotizaciones",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/main.Quotation"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "main.Quotation": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "clientName": {
+                    "type": "string"
+                },
+                "currency": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                }
+            }
+        }
+    }
+}

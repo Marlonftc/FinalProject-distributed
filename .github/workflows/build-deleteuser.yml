@@ -1,0 +1,46 @@
+name: Deploy DeleteUser Service
+
+on:
+  push:
+    branches:
+      - test
+    paths:
+      - 'Backend/Domain/Users/DeleteUser/**'
+      - '.github/workflows/build-deleteuser.yml'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push Docker image
+        run: |
+          docker build -t mftc2412/deleteuser-service ./Backend/Domain/Users/DeleteUser
+          docker push mftc2412/deleteuser-service
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST_DELETE }}
+          username: ${{ secrets.EC2_USER_DELETE }}
+          key: ${{ secrets.EC2_KEY_DELETE }}
+          script: |
+            docker rm -f deleteuser-service || true
+            docker pull mftc2412/deleteuser-service
+            docker run -d --restart unless-stopped --name deleteuser-service -p 3004:3004 \
+              -e DB_HOST=3.224.166.101 \
+              -e DB_USER=root \
+              -e DB_PASSWORD=MySql@1234  \
+              -e DB_NAME=usersdb \
+              -e DB_PORT=3306 \
+              -e PORT=3004 \
+              mftc2412/deleteuser-service

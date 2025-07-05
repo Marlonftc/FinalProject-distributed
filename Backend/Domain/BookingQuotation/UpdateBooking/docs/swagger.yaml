@@ -1,0 +1,44 @@
+basePath: /api/bookings
+definitions:
+  main.Booking:
+    properties:
+      client_name:
+        type: string
+      date:
+        type: string
+      service:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API to update booking entries in SQL Server
+  title: Update Booking API
+  version: "1.0"
+paths:
+  /api/bookings/{id}:
+    put:
+      description: Update an existing booking by ID
+      parameters:
+      - description: Booking ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Booking info
+        in: body
+        name: booking
+        required: true
+        schema:
+          $ref: '#/definitions/main.Booking'
+      responses:
+        "200":
+          description: Booking updated
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Update booking
+swagger: "2.0"

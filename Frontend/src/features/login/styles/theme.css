@@ -1,0 +1,158 @@
+/* Variables para temas */
+:root {
+  --bg-main: rgba(255, 255, 255, 0.1);
+  --text-main: white;
+  --box-shadow: rgba(0, 0, 0, 0.25);
+  --button-bg: white;
+  --button-text: black;
+  --button-hover: #eee;
+}
+
+[data-theme='dark'] {
+  --bg-main: rgba(18, 18, 18, 0.7);
+  --text-main: #f1f1f1;
+  --box-shadow: rgba(255, 255, 255, 0.1);
+  --button-bg: #333;
+  --button-text: white;
+  --button-hover: #444;
+}
+
+/* Estilo base */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background: url('/bg-login.jpg') no-repeat center center fixed;
+  background-size: cover;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--text-main);
+}
+
+.login-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+.login-box {
+  background: var(--bg-main);
+  backdrop-filter: blur(20px);
+  padding: 40px;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 520px;
+  color: var(--text-main);
+  text-align: center;
+  box-shadow: 0 8px 32px var(--box-shadow);
+  position: relative;
+}
+
+.login-box h2 {
+  font-size: 30px;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px 4px 12px 0.1px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  font-size: 14px;
+}
+
+.input-group .icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+}
+
+.options {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+.options a {
+  color: var(--text-main);
+  text-decoration: none;
+}
+
+.options input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 25px;
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background-color: var(--button-hover);
+}
+
+.register {
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.register a {
+  font-weight: bold;
+  color: var(--text-main);
+  text-decoration: none;
+}
+
+.register a:hover {
+  text-decoration: underline;
+}
+
+.theme-toggle-btn-small {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  width: 40px;
+  height: 40px;
+  background-color: rgba(0, 0, 0, 0.5); /* o usa var(--bg-main) */
+  border: none;
+  border-radius: 50%;
+  color: var(--text-main);
+  font-size: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 1000;
+  transition: background 0.3s;
+}
+
+body[data-theme='light'] {
+  background: url('/bg-login.jpg') no-repeat center center fixed;
+  background-size: cover;
+}
+
+body[data-theme='dark'] {
+  background: url('/bg-dark.jpg') no-repeat center center fixed;
+  background-size: cover;
+}

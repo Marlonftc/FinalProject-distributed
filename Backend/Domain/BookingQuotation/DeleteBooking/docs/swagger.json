@@ -1,0 +1,42 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API to delete bookings from SQL Server",
+        "title": "Delete Booking API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/api/bookings",
+    "paths": {
+        "/api/bookings/{id}": {
+            "delete": {
+                "description": "Delete a booking by ID",
+                "summary": "Delete booking",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Booking ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Booking deleted",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

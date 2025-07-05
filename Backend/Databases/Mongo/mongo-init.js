@@ -18,4 +18,4 @@ db.itemImages.insertMany([
   }
 ]);
 
-print(" MongoDB se ha inicializado con datos de ejemplo en 'itemImages'.");
+print(" MongoDB has been initialized with sample data in 'itemImages.");

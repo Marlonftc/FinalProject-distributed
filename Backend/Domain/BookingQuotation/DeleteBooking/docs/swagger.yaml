@@ -1,0 +1,28 @@
+basePath: /api/bookings
+host: localhost:8080
+info:
+  contact: {}
+  description: API to delete bookings from SQL Server
+  title: Delete Booking API
+  version: "1.0"
+paths:
+  /api/bookings/{id}:
+    delete:
+      description: Delete a booking by ID
+      parameters:
+      - description: Booking ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Booking deleted
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Delete booking
+swagger: "2.0"

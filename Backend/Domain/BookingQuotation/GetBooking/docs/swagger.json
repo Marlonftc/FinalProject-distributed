@@ -1,0 +1,49 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API to get bookings from SQL Server",
+        "title": "Get Booking API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/api/bookings",
+    "paths": {
+        "/api/bookings/{id}": {
+            "get": {
+                "description": "Retrieve booking details from SQL Server",
+                "summary": "Get booking by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Booking ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Booking not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

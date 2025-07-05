@@ -1,0 +1,70 @@
+basePath: /api
+definitions:
+  main.Booking:
+    properties:
+      customer:
+        description: required
+        type: string
+      date:
+        description: required
+        type: string
+      id:
+        description: optional
+        type: integer
+      item:
+        description: required
+        type: string
+    type: object
+host: localhost:8086
+info:
+  contact:
+    email: support@example.com
+    name: API Support
+    url: http://www.example.com/support
+  description: This microservice creates a booking in SQL Server.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://example.com/terms/
+  title: Create Booking API
+  version: "1.0"
+paths:
+  /bookings:
+    post:
+      consumes:
+      - application/json
+      description: Create a new booking with customer, date and item
+      parameters:
+      - description: Booking Data
+        in: body
+        name: booking
+        required: true
+        schema:
+          $ref: '#/definitions/main.Booking'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a new booking
+      tags:
+      - bookings
+schemes:
+- http
+swagger: "2.0"
