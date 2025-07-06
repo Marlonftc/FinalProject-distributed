@@ -16,7 +16,7 @@ export const getUserData = async (userId, token) => {
 };*/
 
 // clientService.js (solo para pruebas locales)
-const API_BASE = "http://localhost:3002/api/users";
+const API_BASE = "http://44.207.87.152/api/users";
 
 export const getUserInfo = async (userId) => {
   try {

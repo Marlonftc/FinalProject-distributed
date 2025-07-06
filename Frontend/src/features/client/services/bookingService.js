@@ -1,6 +1,7 @@
 // src/features/client/services/bookingService.js
-const BASE_CREATE_URL = 'http://localhost:8086/api/bookings';
-const BASE_DELETE_URL = 'http://localhost:8086/api/bookings';
+//const BASE_CREATE_URL = 'http://localhost:8086/api/bookings';
+//const BASE_DELETE_URL = 'http://localhost:8086/api/bookings';
+const BASE_API = 'http://44.207.87.152/api/bookings';
 
 export const createBooking = async (bookingData) => {
   const res = await fetch(BASE_CREATE_URL, {
@@ -15,7 +16,7 @@ export const createBooking = async (bookingData) => {
 };
 
 export const deleteBooking = async (bookingId) => {
-  const res = await fetch(`http://localhost:8089/api/bookings/${bookingId}`, {
+  const res = await fetch(`${BASE_API}/${bookingId}`, {
     method: 'DELETE',
   });
   if (!res.ok) throw new Error('Error deleting booking');
@@ -24,13 +25,13 @@ export const deleteBooking = async (bookingId) => {
 
 
 export const getBookings = async () => {
-  const res = await fetch('http://localhost:8086/api/bookings');
+  const res = await fetch('BASE_API');
   if (!res.ok) throw new Error('Error fetching bookings');
   return res.json();
 };
 
 export const getBookingsByCustomer = async (customerName) => {
-  const res = await fetch(`http://localhost:8090/api/bookings?customer=${encodeURIComponent(customerName)}`);
+  const res = await fetch(`${BASE_API}?customer=${encodeURIComponent(customerName)}`);
   if (!res.ok) throw new Error('Error fetching bookings');
   return res.json();
 };

@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3009/api/settings'; // cambia por nginx si lo usas
+const API_URL = 'http://44.207.87.152/api/settings'; // cambia por nginx si lo usas
 
 export async function getUserSettings(userId) {
   const res = await fetch(`${API_URL}/${userId}`);

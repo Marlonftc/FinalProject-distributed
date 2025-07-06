@@ -1,6 +1,6 @@
 // src/features/login/services/userPreferencesAPI.js
 
-const API_BASE_URL = "http://localhost:3009/api/settings"; // Ajusta el puerto si es diferente
+const API_BASE_URL = "http://44.207.87.152/api/settings"; // Ajusta el puerto si es diferente
 
 export async function getUserSettings(userId) {
   const res = await fetch(`${API_BASE_URL}/${userId}`);
