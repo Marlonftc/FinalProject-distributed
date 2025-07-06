@@ -1,4 +1,3 @@
-// Backend/Domain/BookingQuotation/CreateBooking/main.go
 package main
 
 import (
@@ -6,8 +5,10 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	_ "github.com/denisenkom/go-mssqldb"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 
@@ -27,15 +28,6 @@ type Booking struct {
 // @title Create Booking API
 // @version 1.0
 // @description This microservice creates a booking in SQL Server.
-// @termsOfService http://example.com/terms/
-
-// @contact.name API Support
-// @contact.url http://www.example.com/support
-// @contact.email support@example.com
-
-// @license.name Apache 2.0
-// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-
 // @host localhost:8086
 // @BasePath /api
 // @schemes http
@@ -45,7 +37,6 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	// Configurar Swagger Info
 	docs.SwaggerInfo.Title = "Create Booking API"
 	docs.SwaggerInfo.Description = "This microservice creates a booking in SQL Server."
 	docs.SwaggerInfo.Version = "1.0"
@@ -53,13 +44,23 @@ func main() {
 
 	router := gin.Default()
 
+	// ✅ Middleware CORS habilitado
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:5173"}, // frontend Vite
+		AllowMethods:     []string{"GET", "POST", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
+
 	// Endpoints
 	router.POST("/api/bookings", createBooking)
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8086" // fallback
+		port = "8086"
 	}
 	log.Println("Server running on port " + port)
 	router.Run(":" + port)

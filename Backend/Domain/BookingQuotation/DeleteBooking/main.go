@@ -6,7 +6,8 @@ import (
 	"log"
 	"net/http"
 	"os"
-
+ 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	_ "github.com/denisenkom/go-mssqldb"
 	_ "deletebooking/docs"
@@ -42,6 +43,15 @@ func main() {
 	}
 
 	router := gin.Default()
+
+		// ✅ Add CORS middleware to allow frontend access
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:5173"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		AllowCredentials: true,
+	}))
+
 
 	router.DELETE("/api/bookings/:id", deleteBooking)
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

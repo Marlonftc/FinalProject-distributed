@@ -1,0 +1,7 @@
+{
+  "go.toolsManagement.autoUpdate": false,
+  "go.useLanguageServer": true,
+  "go.alternateTools": {
+    "go": "C:\\Program Files\\Go\\bin\\go.exe"
+  }
+}

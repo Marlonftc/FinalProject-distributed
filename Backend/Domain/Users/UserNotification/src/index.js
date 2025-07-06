@@ -32,7 +32,7 @@ const swaggerOptions = {
       version: '1.0.0',
       description: 'Service for sending real-time notifications using Redis and WebSocket',
     },
-    servers: [{ url: `http://localhost:${PORT}` }],
+    servers: [{ url: `http://4.192.192.190:${3006}` }],
   },
   apis: ['./src/routes/*.js'],
 };

@@ -1,0 +1,42 @@
+name: Deploy UserNotification Service
+
+on:
+  push:
+    branches:
+      - test
+    paths:
+      - 'Backend/Domain/Users/UserNotification/**'
+      - '.github/workflows/build-usernotification.yml'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push Docker image
+        run: |
+          docker build -t mftc2412/usernotification-service ./Backend/Domain/Users/UserNotification
+          docker push mftc2412/usernotification-service
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST_NOTIFICATION }}
+          username: ${{ secrets.EC2_USER_NOTIFICATION }}
+          key: ${{ secrets.EC2_KEY_NOTIFICATION }}
+          script: |
+            docker rm -f usernotification-service || true
+            docker pull mftc2412/usernotification-service
+            docker run -d --restart unless-stopped --name usernotification-service -p 3006:3006 \
+              -e REDIS_HOST=44.195.137.97 \
+              -e PORT=3006 \
+              mftc2412/usernotification-service

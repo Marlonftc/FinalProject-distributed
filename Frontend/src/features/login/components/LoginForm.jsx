@@ -27,28 +27,31 @@ const LoginForm = ({ onToggle }) => {
   try {
     const token = await loginUser(formData);
 
-    console.log("🔐 TOKEN RECIBIDO:", token); // 👈 Asegúrate que aquí aparece el token correcto
+    console.log("🔐 TOKEN RECIBIDO:", token);
 
     if (!token || typeof token !== "string") {
-      throw new Error("Token inválido");
+      throw new Error("Invalid token");
     }
+
+    // ✅ Save the token to localStorage
+    localStorage.setItem("token", token);
 
     const decoded = jwt_decode(token);
-
     const userRole = decoded.role;
 
-    alert("Login exitoso");
+    alert("Login successful");
 
     if (userRole === "admin") {
-      navigate("/admin");
+      navigate("/admin/home");
     } else {
-      navigate("/cliente");
+      navigate("/client/home"); // Make sure this path matches your router
     }
   } catch (error) {
-    console.error("❌ Error en login:", error.message);
-    alert(error.message || "Credenciales inválidas");
+    console.error("❌ Login error:", error.message);
+    alert(error.message || "Invalid credentials");
   }
 };
+
 
   return (
     <div className="login-box">
@@ -86,7 +89,7 @@ const LoginForm = ({ onToggle }) => {
             />
             Remember me
           </label>
-          <a href="#">Forgot password?</a>
+          
         </div>
         <button type="submit">Login</button>
         <div className="register">

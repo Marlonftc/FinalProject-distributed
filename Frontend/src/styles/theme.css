@@ -9,3 +9,63 @@ body[data-theme='light'] {
   background: url('/bg-login.jpg') no-repeat center center fixed;
   background-size: cover;
 }
+
+/* HOME BOX PARA CLIENTE */
+.home-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: url('/background.jpg') no-repeat center center fixed;
+  background-size: cover;
+}
+
+.home-box {
+  background: var(--bg-main);
+  backdrop-filter: blur(15px);
+  padding: 40px;
+  border-radius: 25px;
+  width: 90%;
+  max-width: 600px;
+  text-align: center;
+  color: var(--text-main);
+  box-shadow: 0 8px 32px var(--box-shadow);
+}
+
+.home-box h1 {
+  font-size: 32px;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.home-box .info {
+  font-size: 16px;
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.home-box .actions {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.home-box button {
+  padding: 12px;
+  border-radius: 25px;
+  font-weight: bold;
+  font-size: 16px;
+  border: none;
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  transition: background 0.3s;
+  cursor: pointer;
+}
+
+.home-box button:hover {
+  background-color: var(--button-hover);
+}

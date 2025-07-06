@@ -1,13 +1,15 @@
 const { createClient } = require('redis');
 
-// Cliente para publicar mensajes
+const redisUrl = `redis://default:${process.env.REDIS_PASSWORD}@${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`;
+
+// Publisher client
 const publisher = createClient({
-  url: process.env.REDIS_URL || 'redis://redis:6379'
+  url: redisUrl
 });
 
-// Cliente para suscribirse a mensajes
+// Subscriber client
 const subscriber = createClient({
-  url: process.env.REDIS_URL || 'redis://redis:6379'
+  url: redisUrl
 });
 
 publisher.on('error', (err) => console.error('Redis Publisher Error:', err));

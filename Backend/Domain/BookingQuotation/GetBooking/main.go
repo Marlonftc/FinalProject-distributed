@@ -38,11 +38,27 @@ func main() {
 
 	router := gin.Default()
 
+	// ✅ Middleware manual de CORS
+router.Use(func(c *gin.Context) {
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+	c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+	c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+	c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+
+	if c.Request.Method == "OPTIONS" {
+		c.AbortWithStatus(204)
+		return
+	}
+
+	c.Next()
+})
+
 	router.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"status": "GetBooking service running"})
 	})
 
 	router.GET("/api/bookings/:id", getBooking)
+	router.GET("/api/bookings", getBookingsByCustomer)
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	log.Printf("🚀 Server running on port %s", port)
@@ -62,8 +78,8 @@ func getBooking(c *gin.Context) {
 	var customerName, service string
 	var date string
 
-	query := `SELECT customer_name, service, booking_date FROM bookings WHERE id = @p1`
-	err := db.QueryRow(query, id).Scan(&customerName, &service, &date)
+	query := `SELECT Customer, Item, Date FROM bookings WHERE id = @p1`
+    err := db.QueryRow(query, id).Scan(&customerName, &service, &date)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			c.JSON(http.StatusNotFound, gin.H{"error": "Booking not found"})
@@ -76,8 +92,48 @@ func getBooking(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"id":            id,
-		"customer_name": customerName,
-		"service":       service,
-		"booking_date":  date,
+		"customer": customerName,
+		"item":       service,
+		"date":  date,
 	})
+}
+
+// @Summary Get bookings by customer name
+// @Description Retrieve all bookings for a specific customer
+// @Param customer query string true "Customer Name"
+// @Success 200 {array} map[string]interface{}
+// @Failure 500 {string} string "Server error"
+// @Router /api/bookings [get]
+func getBookingsByCustomer(c *gin.Context) {
+	customer := c.Query("customer")
+	if customer == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing customer parameter"})
+		return
+	}
+
+	rows, err := db.Query(`SELECT id, Customer, Item, Date FROM bookings WHERE Customer = @p1`, customer)
+	if err != nil {
+		log.Println("❌ Error querying bookings:", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Query error"})
+		return
+	}
+	defer rows.Close()
+
+	var bookings []map[string]interface{}
+	for rows.Next() {
+		var id int
+		var name, service, date string
+		if err := rows.Scan(&id, &name, &service, &date); err != nil {
+			log.Println("❌ Error scanning row:", err)
+			continue
+		}
+		bookings = append(bookings, gin.H{
+			"id":            id,
+			"customer": name,
+			"item":       service,
+			"date":  date,
+		})
+	}
+
+	c.JSON(http.StatusOK, bookings)
 }
