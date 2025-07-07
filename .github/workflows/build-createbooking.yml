@@ -5,7 +5,7 @@ on:
     branches:
       - test
     paths:
-      - 'Backend/Domain/Booking/CreateBooking/**'
+      - 'Backend/Domain/BookingQuotation/CreateBooking/**'
       - '.github/workflows/build-createbooking.yml'
 
 jobs:
@@ -24,7 +24,7 @@ jobs:
 
       - name: Build and Push Docker image
         run: |
-          docker build -t mftc2412/createbooking-service ./Backend/Domain/Booking/CreateBooking
+          docker build -t mftc2412/createbooking-service ./Backend/Domain/BookingQuotation/CreateBooking
           docker push mftc2412/createbooking-service
 
       - name: Deploy to EC2
