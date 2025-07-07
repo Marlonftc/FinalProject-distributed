@@ -1,0 +1,42 @@
+name: Deploy DeleteBooking Service
+
+on:
+  push:
+    branches:
+      - test
+    paths:
+      - 'Backend/Domain/BookingQuotation/DeleteBooking/**'
+      - '.github/workflows/build-deletebooking.yml'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push Docker image
+        run: |
+          docker build -t mftc2412/deletebooking-service ./Backend/Domain/BookingQuotation/DeleteBooking
+          docker push mftc2412/deletebooking-service
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST_DELETEBOOKING }}
+          username: ${{ secrets.EC2_USER_DELETEBOOKING }}
+          key: ${{ secrets.EC2_KEY_DELETEBOOKING }}
+          script: |
+            docker rm -f deletebooking-service || true
+            docker pull mftc2412/deletebooking-service
+            docker run -d --restart always --name deletebooking-service -p 8089:8089 \
+              -e PORT=8089 \
+              -e SQLSERVER_CONN="sqlserver://sa:Admin123!@52.72.225.154:1433?database=bookingdb" \
+              mftc2412/deletebooking-service
