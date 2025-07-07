@@ -1,0 +1,42 @@
+name: Deploy CreateBooking Service
+
+on:
+  push:
+    branches:
+      - test
+    paths:
+      - 'Backend/Domain/Booking/CreateBooking/**'
+      - '.github/workflows/build-createbooking.yml'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push Docker image
+        run: |
+          docker build -t mftc2412/createbooking-service ./Backend/Domain/Booking/CreateBooking
+          docker push mftc2412/createbooking-service
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST_CREATEBOOKING }}
+          username: ${{ secrets.EC2_USER_CREATEBOOKING }}
+          key: ${{ secrets.EC2_KEY_CREATEBOOKING }}
+          script: |
+            docker rm -f createbooking-service || true
+            docker pull mftc2412/createbooking-service
+            docker run -d --restart always --name createbooking-service -p 8086:8086 \
+              -e PORT=8086 \
+              -e SQLSERVER_CONN="sqlserver://sa:Admin123!@52.72.225.154:1433?database=bookingdb" \
+              mftc2412/createbooking-service
